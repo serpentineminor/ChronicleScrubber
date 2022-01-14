@@ -1,7 +1,7 @@
 TODO: Cleanup
-	TODO: Read through current code
+    TODO: Read through current code
 	TODO: Read on refactoring and style guides
-TODO: Compatability
+TODO: Compatibility
 TODO: Input File Flexibility 
 	TODO: Handle Unicode Exceptions 
 	TODO: Support additional filetypes?

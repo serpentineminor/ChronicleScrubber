@@ -1,4 +1,5 @@
 import sys
+import os
 
 import configparser
 import pathlib
@@ -207,10 +208,11 @@ def scrubtext(self):
 
     f = open(filepath, "r")
 
-    filepathmain = pathlib.Path(filepath).stem
-    filepathext = pathlib.Path(filepath).suffix
-
-    newfilename = filepathmain + "_revised" + filepathext
+    filepathmain = str(pathlib.Path(filepath).stem)
+    filepathext = str(pathlib.Path(filepath).suffix)
+    filepathdir = str(pathlib.Path(filepath).parent)
+    trailingslash = str(os.sep)
+    newfilename = filepathdir + trailingslash + filepathmain + "_revised" + filepathext
 
     copy = open(newfilename, "w")
 

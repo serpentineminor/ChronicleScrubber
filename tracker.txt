@@ -1,0 +1,10 @@
++++ PyCutPhrase +++
+- some sort of GUI
+	- mockup of DelphiCutPhrase
+- Cleaning process
+	- make useable file adaptable
+
++++ PyCutPhrase +++
+     - Cut chunks of text (for removing bots)
+     - Cut other unwanted parts
+     - Refer to Text Cleaning Guide

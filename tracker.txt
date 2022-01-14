@@ -1,0 +1,6 @@
++++ PyCutPhrase +++
+TODO: Make usable file adaptable
+TODO: Cut chunks of text (for removing bots)
+TODO: Cut other unwanted parts
+TODO: Refer to Text Cleaning Guide
+TODO: Fix this damn document.

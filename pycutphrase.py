@@ -3,6 +3,7 @@ import os
 
 import configparser
 import pathlib
+import codecs, unicodedata
 
 from PyQt6.QtWidgets import (
     QApplication,
@@ -124,10 +125,10 @@ def scrubtext(self):
     # Checking existence of ini file, so that if there's not
     # an ini file for it to read, there will be.
     # I could probably carry the sinput1 etc etc variables
-    # across instead of having them dump into the beginword etc etc variables.
-    # I'm not exactly sure why I'm doing it like this yet but I think there's
-    # some reason for it.
-    # TODO: Check over the use of sinput1 variables vs beginword variables, see if use is justified.
+    # across instead of having them dump into the beginword
+    # etc etc variables.
+    # I'm not exactly sure why I'm doing it like this yet
+    # but I think there's some reason for it.
     # print_config_to_console()
     config.read("settingsfortest1.ini")
     print("Beginning scrub text.")
@@ -177,7 +178,8 @@ def scrubtext(self):
     print("Beginword: ", beginword, "\n", "Endword: ",
           endword, "\n", "Filepath: ", filepath)
 
-    print("Variables assigned with sinput1, sinput2, and targetpathinput.")
+    print("Variables assigned with sinput1, sinput2, and "
+          "targetpathinput.")
     # print_config_to_console()
     config.read("settingsfortest1.ini")
 
@@ -199,34 +201,41 @@ def scrubtext(self):
     inputexistcheck = pathlib.Path(filepath).exists()
 
     if not inputexistcheck:
-        print("Indicated file does not exist or submitted file path is invalid."
+        print("Indicated file does not exist or submitted file path "
+              "is invalid."
               "\n "
               "Check the file location and the path you have input.")
 
     else:
         print("File is found. Reading...")
 
-    f = open(filepath, "r")
+    f = open(filepath, 'r', encoding="utf8", errors='ignore')
 
     filepathmain = str(pathlib.Path(filepath).stem)
     filepathext = str(pathlib.Path(filepath).suffix)
     filepathdir = str(pathlib.Path(filepath).parent)
     trailingslash = str(os.sep)
-    newfilename = filepathdir + trailingslash + filepathmain + "_revised" + filepathext
+    newfilename = (filepathdir + trailingslash + filepathmain +
+                   "_revised" + filepathext)
 
-    copy = open(newfilename, "w")
+    copy = open(newfilename, "w", encoding="utf16", errors='ignore')
 
     # print_config_to_console()
 
     skipline = False
 
-    # I'm not using this right now, this is inherited from the method used in the
-    # original Delphi program. Keeping it commented out for now.
-    # If I switch to searching only the beginning of lines, I will use them. Maybe.
+    # I'm not using this right now, this is
+    # inherited from the method used in the
+    # original Delphi program.
+    # Keeping it commented out for now.
+    # If I switch to searching only the
+    # beginning of lines, I will use them.
+    # Maybe.
     # begincharcnt = len(beginword)
     # endcharcnt = len(endword)
 
     for comparestring in f:
+        # unicodehandling = codecs.decode('utf-8').encode('utf-8', 'replace').decode('utf-8')
         # comparestring = f.readline()
         if beginword in comparestring:
             skipline = True
@@ -253,10 +262,11 @@ class MainWindow(QMainWindow):
 
         self.setWindowTitle("PyCutPhrase")
 
-        self.explainlabel = QLabel("This utility will remove text from a "
-                                   "document that begins with a specific phrase "
-                                   "and all lines up to and including the line "
-                                   "on which an end phrase exists")
+        self.explainlabel = QLabel("This utility will remove text from "
+                                   "a document that begins with a "
+                                   "specific  phrase and all lines up "
+                                   "to and including the line on which "
+                                   "an end phrase exists")
         self.explainlabel.setWordWrap(True)
 
         self.label1 = QLabel("Beginning word line")

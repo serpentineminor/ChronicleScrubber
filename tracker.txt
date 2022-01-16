@@ -1,9 +1,29 @@
-TODO: Cleanup
-    TODO: Read through current code
-	TODO: Read on refactoring and style guides
-TODO: Compatibility
-TODO: Input File Flexibility 
-	TODO: Handle Unicode Exceptions 
-	TODO: Support additional filetypes?
-TODO: More Delete Options
-TODO: Replace and Format Options
++++++++++++++++++++++++++++++++
++        GENERAL TODOS        +
++++++++++++++++++++++++++++++++
+Cleanup
+    Read through current code
+	Read on refactoring and style guides
+    Check over the use of sinput1 variables vs beginword variables, see if use is justified.
+Compatibility
+Input File Flexibility
+	Handle Unicode Exceptions
+	    - Issues with exit code -1073740791 (0xC0000409) and noncompletion of the
+	      procedure seem to be related to attempts to parse non-ASCII characters. Error not
+	      limited to documents with emojis.
+	Support additional filetypes?
+More Delete Options
+Replace and Format Options
+
++++++++++++++++++++++++++++++++
++        SPECIFIC ISSUES      +
++++++++++++++++++++++++++++++++
+
++++++++++++++++++++++++++++++++
++         FIXED ISSUES        +
++++++++++++++++++++++++++++++++
+UNICODE DECODING ERRORS:
+- Errors regarding parsing certain Unicode characters.
+    - How I fix this depends on exactly what I want to do with this.
+    - Don't want to delete the characters since they ideally should be displayed in output.
+ * Fix: decode input file as utf8, encode output file as utf16

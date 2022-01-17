@@ -78,22 +78,6 @@ def checkconfigstructure():
 
 checkconfigstructure()
 
-# def print_config_to_console():
-#     print("Beginning print config to console.")
-#
-#     config.read("settingsfortest1.ini")
-#
-#     sectionheader = config.sections()
-#
-#     print("Sections: ", sectionheader)
-#
-#     for key in config['TARGETSTRINGS']:
-#         print("Has key ", key, " with value ", config['TARGETSTRINGS'][key])
-#
-#     print("Finished print config to console.")
-
-
-# print_config_to_console()
 
 sinput1 = config['TARGETSTRINGS']["beginword"]
 sinput2 = config['TARGETSTRINGS']["endword"]
@@ -114,8 +98,6 @@ def is_configinput_empty():
 
     print("Check for empty config input is complete.")
 
-    # print_config_to_console()
-
 
 is_configinput_empty()
 
@@ -128,7 +110,6 @@ def scrubtext(self):
     # etc etc variables.
     # I'm not exactly sure why I'm doing it like this yet
     # but I think there's some reason for it.
-    # print_config_to_console()
     config.read("settingsfortest1.ini")
     print("Beginning scrub text.")
 
@@ -155,8 +136,6 @@ def scrubtext(self):
             config.write(configfile)
 
         print("Your .ini file has been created.")
-        # print_config_to_console()
-        # config.read("settingsfortest1.ini")
 
     with open("settingsfortest1.ini", "w") as configfile:
         config.set('TARGETSTRINGS', "beginword", sinput1)
@@ -164,8 +143,6 @@ def scrubtext(self):
         config.set('TARGETSTRINGS', "filepath", targetpathinput)
 
         print("Config values have been updated.")
-        # print_config_to_console()
-        # config.read("settingsfortest1.ini")
 
     print("Finished ini exist check.")
     print("Assigned beginword etc etc to sinput1 etc etc.")
@@ -179,7 +156,7 @@ def scrubtext(self):
 
     print("Variables assigned with sinput1, sinput2, and "
           "targetpathinput.")
-    # print_config_to_console()
+
     config.read("settingsfortest1.ini")
 
     print("Beginword: ", beginword, "\n", "Endword: ",
@@ -192,7 +169,6 @@ def scrubtext(self):
     filepath = config['TARGETSTRINGS']["filepath"]
 
     print("Variables assigned with config values.")
-    # print_config_to_console()
 
     print("Beginword: ", beginword, "\n", "Endword: ",
           endword, "\n", "Filepath: ", filepath)
@@ -219,8 +195,6 @@ def scrubtext(self):
 
     copy = open(newfilename, "w", encoding="utf16", errors='ignore')
 
-    # print_config_to_console()
-
     skipline = False
 
     # I'm not using this right now, this is
@@ -236,8 +210,7 @@ def scrubtext(self):
     linedeletecount = 0
 
     for comparestring in f:
-        # unicodehandling = codecs.decode('utf-8').encode('utf-8', 'replace').decode('utf-8')
-        # comparestring = f.readline()
+
         if beginword in comparestring:
             skipline = True
             linedeletecount = 0

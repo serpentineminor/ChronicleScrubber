@@ -26,3 +26,55 @@ UNICODE DECODING ERRORS:
     - How I fix this depends on exactly what I want to do with this.
     - Don't want to delete the characters since they ideally should be displayed in output.
  * Fix: decode input file as utf8, encode output file as utf16
+
+
+
++++++++++++++++++++++++++++++++
++            NOTES            +
++++++++++++++++++++++++++++++++
+Avatar:
+* Only want to remove lines containing the singular word Avatar.
+* May be obsolete if pulling from straight TXT file output instead of copy/paste from HTML to TXT.
+
+Brackets:
+* There are likely to be several instances of unpaired brackets or brackets across multiple lines-- how to handle?
+	* Could possibly have it remove any lines that begin OR end with any form of square bracket, in order to remove user error slipping through filter. Though, this could end up removing lines that are desired but just happen to have square brackets mixed in as a typo.
+* For now I just want to remove them-- maybe later I could separate them & pull/link them as comments.
+
+Reactions:
+* When copied from HTML these are appended as--
+😀 1
+or
+:WHEEZE: 1
+* If it is exported as a TXT file, then it will be seperated and shown like this--
+{Reactions}
+😀 (1)
+or
+:WHEEZE: (1)
+* In either case, I want to preserve emojis in lines that aren't reactions.
+
+Bot messages:
+* similiar to brackets, for now will just remove, but may later cut & link.
+
+Time/date:
+* No concerns. Tends to have distinct and consistent formats easily targetted.
+
+Floating character labels:
+* Tough to target without affecting the desirable ones.
+* Could sort of tag all label lines, and delete ones with no text between them and the next label line.
+
+Username -> character label:
+* Easy enough. Bundles with time/date stamps & is in predictable  format.
+* If tagged per previous thought, would perhaps simplify adding colors.
+* Emojis & fancy text may prove problematic.
+
+Fancy Test -> Appropriate font
+* Tough. Can't think of any way to do this other than the long route--
+𝔞 = a,
+𝔟 = b,
+etc etc
+* Could check to see how the webapp does it. Certainly somebody else wanted to do this before.
+* IMPORTANT: If I really want to save myself work, then the program HAS to have a way to assign the font at the rtf or docx stage.
+
+Digital Communication Formatting:
+* Other than code blocks? No idea.

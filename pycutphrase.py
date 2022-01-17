@@ -3,7 +3,6 @@ import os
 
 import configparser
 import pathlib
-import codecs, unicodedata
 
 from PyQt6.QtWidgets import (
     QApplication,
@@ -234,23 +233,26 @@ def scrubtext(self):
     # begincharcnt = len(beginword)
     # endcharcnt = len(endword)
 
+    linedeletecount = 0
+
     for comparestring in f:
         # unicodehandling = codecs.decode('utf-8').encode('utf-8', 'replace').decode('utf-8')
         # comparestring = f.readline()
         if beginword in comparestring:
             skipline = True
+            linedeletecount = 0
             print("Beginword was detected.")
 
         if skipline:
-            print("-deleted-")
+            linedeletecount += 1
 
         else:
             copy.write(comparestring)
-            print(comparestring)
 
         if endword in comparestring:
             skipline = False
             print("Endword was detected.")
+            print("Deleted %s lines." % linedeletecount)
 
     f.close()
     copy.close()

@@ -3,6 +3,7 @@ import os
 
 import configparser
 import pathlib
+import re
 
 from PyQt6.QtWidgets import (
     QApplication,
@@ -208,6 +209,11 @@ def scrubtext(self):
     # endcharcnt = len(endword)
 
     linedeletecount = 0
+    totlinedeletecount = 0
+
+    bracketpattern = re.compile(r"((\[.*?])|(\((edited)\)))")
+
+    usertagpattern = re.compile(r"#\d{4}")
 
     for comparestring in f:
 
@@ -218,14 +224,26 @@ def scrubtext(self):
 
         if skipline:
             linedeletecount += 1
+            totlinedeletecount += 1
+
+        elif re.search(usertagpattern, comparestring):
+            copy.write(comparestring)
+            print(comparestring)
+
+        elif re.search(bracketpattern, comparestring):
+            pass
 
         else:
             copy.write(comparestring)
+            print(comparestring)
 
         if endword in comparestring:
             skipline = False
             print("Endword was detected.")
             print("Deleted %s lines." % linedeletecount)
+            print("Total lines deleted: %s" % totlinedeletecount)
+
+    print("Total lines deleted: %s" % totlinedeletecount)
 
     f.close()
     copy.close()

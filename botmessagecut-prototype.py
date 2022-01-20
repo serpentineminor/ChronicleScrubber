@@ -226,22 +226,15 @@ def scrubtext(self):
             linedeletecount += 1
             totlinedeletecount += 1
 
-        elif re.search(usertagpattern, comparestring):
-            copy.write(comparestring)
-            print(comparestring)
-
-        elif re.search(bracketpattern, comparestring):
-            pass
-
-        else:
-            copy.write(comparestring)
-            print(comparestring)
-
         if endword in comparestring:
             skipline = False
             print("Endword was detected.")
             print("Deleted %s lines." % linedeletecount)
             print("Total lines deleted: %s" % totlinedeletecount)
+
+        else:
+            copy.write(comparestring)
+            print(comparestring)
 
     print("Total lines deleted: %s" % totlinedeletecount)
 

@@ -80,3 +80,6 @@ etc etc
 
 Digital Communication Formatting:
 * Other than code blocks? No idea.
+
+Dates and Document Size:
+* Use something similar to the skipline loop to chop off dates up to the last import?

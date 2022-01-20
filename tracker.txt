@@ -55,6 +55,8 @@ or
 
 Bot messages:
 * similiar to brackets, for now will just remove, but may later cut & link.
+* Username input to cut bots?
+    * Have list of recognized usernames, turn on skipline until the next allowed username appears.
 
 Time/date:
 * No concerns. Tends to have distinct and consistent formats easily targetted.

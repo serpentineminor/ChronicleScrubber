@@ -1,9 +1,14 @@
 import sys
 import os
+import codecs
 
 import configparser
 import pathlib
 import re
+
+import urllib.parse
+
+import emoji
 
 from PyQt6.QtWidgets import (
     QApplication,
@@ -19,25 +24,73 @@ config = configparser.ConfigParser()
 
 iniexistcheck = pathlib.Path("settingsfortest2.ini").exists()
 
-config.read("settingsfortest2.ini")
 
-targetpathinput = config['TARGETSTRINGS']["filepath"]
+def checkconfigstructure():
+    config.read("settingsfortest2.ini", encoding="utf8")
+
+    if not 'TARGETSTRINGS' in config:
+        config['TARGETSTRINGS'] = {"filepath": ""}
+
+        print("TARGETSTRINGS section was missing. New file created.")
+
+        with open("settingsfortest2.ini", "w", encoding="utf8") as configfile:
+            config.write(configfile)
+
+    config.read("settingsfortest2.ini", encoding="utf8")
+
+    targetstringsection = config['TARGETSTRINGS']
+
+    if "filepath" in targetstringsection:
+        print("Ini file structure appears valid.")
+
+    else:
+        config['TARGETSTRINGS'] = {"filepath": ""}
+
+        print("Filepath key was missing. New file created.")
+
+        with open("settingsfortest2.ini", "w", encoding="utf8") as configfile:
+            config.write(configfile)
+
+    print("Config structure check complete.")
+
+
+checkconfigstructure()
+filepathcfg = config['TARGETSTRINGS']["filepath"]
+
+
+def is_configinput_empty():
+    print("Beginning check for empty config inputs.")
+    if not filepathcfg:
+        print("Filepath is empty.")
+
+    if filepathcfg:
+        print("Config values are defined.")
+
+    print("Check for empty config input is complete.")
 
 
 def scrubtext():
-    config.read("settingsfortest2.ini")
-    filepath = config['TARGETSTRINGS']["filepath"]
+    config.read("settingsfortest2.ini", encoding="utf8")
+
+    filepathcfg = config['TARGETSTRINGS']["filepath"]
+
+    filepath = filepathcfg
+    print("pulled from cfg:", filepath)
+    filepath = filepath.encode("utf8")
+    print("encoded with utf8:", filepath)
+    filepath = filepath.decode("utf8")
+    print("decoded to utf8:", filepath)
 
     inputexistcheck = pathlib.Path(filepath).exists()
 
-    if not inputexistcheck:
+    if inputexistcheck:
+        print("File is found. Reading...")
+
+    else:
         print("Indicated file does not exist or submitted file path "
               "is invalid."
               "\n "
               "Check the file location and the path you have input.")
-
-    else:
-        print("File is found. Reading...")
 
     f = open(filepath, 'r', encoding="utf8", errors='ignore')
 
@@ -48,7 +101,7 @@ def scrubtext():
     newfilename = (filepathdir + trailingslash + filepathmain +
                    "_revised" + filepathext)
 
-    copy = open(newfilename, "w", encoding="utf16", errors='ignore')
+    copy = open(newfilename, "w", encoding="utf8", errors='ignore')
 
     skipline = True
 
@@ -93,22 +146,38 @@ def filefind_button_click():
 
     filedialogoutput = MainWindow.FilefindDialog.getOpenFileName()
 
-    filedialogpath = filedialogoutput[0]
+    print(filedialogoutput)
+
+    filedialogpath = pathlib.Path(os.fsdecode(filedialogoutput[0]))
 
     print("Selected file path: ", filedialogpath)
 
-    config.read("settingsfortest2.ini")
+    filedialogpath = str(filedialogpath)
+    print("repr:", filedialogpath)
+    filedialogpath = filedialogpath.encode(encoding="utf8", errors="surrogateescape")
+    print("encode:", filedialogpath)
+    filedialogpath = filedialogpath.decode(encoding="utf8",
+                                           errors="surrogateescape")
+    print("decode:", repr(filedialogpath))
+    #print("decode:", filedialogpath)
+
+    config.read("settingsfortest2.ini", encoding="utf8")
 
     targetstringsed = config["TARGETSTRINGS"]
 
     targetstringsed["filepath"] = filedialogpath
 
-    with open("settingsfortest2.ini", "w") as configfile:
+    #print(targetstringsed["filepath"])
+    #print(repr(filedialogpath))
+    #print(filedialogpath)
+
+    with open("settingsfortest2.ini", "w", encoding="utf8", errors="surrogateescape") \
+            as configfile:
         config.write(configfile)
 
-    config.read("settingsfortest2.ini")
+    config.read("settingsfortest2.ini", encoding="utf8")
 
-    with open("settingsfortest2.ini", "w") as configfile:
+    with open("settingsfortest2.ini", "w", encoding="utf8", errors="surrogateescape") as configfile:
         config.write(configfile)
 
     scrubtext()

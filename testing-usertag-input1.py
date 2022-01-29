@@ -1,18 +1,14 @@
 import sys
 import os
-import codecs
 
 import configparser
 import pathlib
 import re
 
-import urllib.parse
-
-import emoji
-
 from PyQt6.QtWidgets import (
     QApplication,
     QMainWindow,
+    QLineEdit,
     QWidget,
     QLabel,
     QPushButton,
@@ -29,7 +25,9 @@ def checkconfigstructure():
     config.read("settingsfortest2.ini", encoding="utf8")
 
     if not 'TARGETSTRINGS' in config:
-        config['TARGETSTRINGS'] = {"filepath": ""}
+        config['TARGETSTRINGS'] = {"filepath": "",
+                                   "usertags": "",
+                                   "bottags": ""}
 
         print("TARGETSTRINGS section was missing. New file created.")
 
@@ -44,9 +42,37 @@ def checkconfigstructure():
         print("Ini file structure appears valid.")
 
     else:
-        config['TARGETSTRINGS'] = {"filepath": ""}
+        config['TARGETSTRINGS'] = {"filepath": "",
+                                   "usertags": "",
+                                   "bottags": ""}
 
         print("Filepath key was missing. New file created.")
+
+        with open("settingsfortest2.ini", "w", encoding="utf8") as configfile:
+            config.write(configfile)
+
+    if "usertags" in targetstringsection:
+        print("Ini file structure appears valid.")
+
+    else:
+        config['TARGETSTRINGS'] = {"filepath": "",
+                                   "usertags": "",
+                                   "bottags": ""}
+
+        print("Usertags key was missing. New file created.")
+
+        with open("settingsfortest2.ini", "w", encoding="utf8") as configfile:
+            config.write(configfile)
+
+    if "bottags" in targetstringsection:
+        print("Ini file structure appears valid.")
+
+    else:
+        config['TARGETSTRINGS'] = {"filepath": "",
+                                   "usertags": "",
+                                   "bottags": ""}
+
+        print("Bottags key was missing. New file created.")
 
         with open("settingsfortest2.ini", "w", encoding="utf8") as configfile:
             config.write(configfile)
@@ -56,6 +82,8 @@ def checkconfigstructure():
 
 checkconfigstructure()
 filepathcfg = config['TARGETSTRINGS']["filepath"]
+usertagcfg = config['TARGETSTRINGS']["usertags"]
+bottagcfg = config['TARGETSTRINGS']["bottags"]
 
 
 def is_configinput_empty():
@@ -73,6 +101,8 @@ def scrubtext():
     config.read("settingsfortest2.ini", encoding="utf8")
 
     filepathcfg = config['TARGETSTRINGS']["filepath"]
+    usertagcfg = config['TARGETSTRINGS']["usertags"]
+    bottagcfg = config['TARGETSTRINGS']["bottags"]
 
     filepath = filepathcfg
     print("pulled from cfg:", filepath)
@@ -105,13 +135,11 @@ def scrubtext():
 
     skipline = True
 
-    bracketpattern = re.compile(r"\[.*?\]")
+    bracketpattern = re.compile(r"(\[|\]).*?(\[|\])")
     usertagpattern = re.compile(r"\#\d{4}")
 
-    plyrusertag = "SerpentineMinor#4434", "In_MyImagination#1364", \
-                  "MusicalOdyssey#6140"
-    botusertag = "Malkav#5442", "Avrae#6944", "Realm of Darkness#1857", \
-                 "[Tzimisce]#8330"
+    plyrusertag = usertagcfg.split(":")
+    botusertag = bottagcfg.split(":")
 
     totlinedeletecount = 0
 
@@ -141,48 +169,6 @@ def scrubtext():
     copy.close()
 
 
-def filefind_button_click():
-    print("Filefile pressed")
-
-    filedialogoutput = MainWindow.FilefindDialog.getOpenFileName()
-
-    print(filedialogoutput)
-
-    filedialogpath = pathlib.Path(os.fsdecode(filedialogoutput[0]))
-
-    print("Selected file path: ", filedialogpath)
-
-    filedialogpath = str(filedialogpath)
-    print("repr:", filedialogpath)
-    filedialogpath = filedialogpath.encode(encoding="utf8", errors="surrogateescape")
-    print("encode:", filedialogpath)
-    filedialogpath = filedialogpath.decode(encoding="utf8",
-                                           errors="surrogateescape")
-    print("decode:", repr(filedialogpath))
-    #print("decode:", filedialogpath)
-
-    config.read("settingsfortest2.ini", encoding="utf8")
-
-    targetstringsed = config["TARGETSTRINGS"]
-
-    targetstringsed["filepath"] = filedialogpath
-
-    #print(targetstringsed["filepath"])
-    #print(repr(filedialogpath))
-    #print(filedialogpath)
-
-    with open("settingsfortest2.ini", "w", encoding="utf8", errors="surrogateescape") \
-            as configfile:
-        config.write(configfile)
-
-    config.read("settingsfortest2.ini", encoding="utf8")
-
-    with open("settingsfortest2.ini", "w", encoding="utf8", errors="surrogateescape") as configfile:
-        config.write(configfile)
-
-    scrubtext()
-
-
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -191,17 +177,38 @@ class MainWindow(QMainWindow):
 
         self.explainlabel = QLabel("This utility will remove any text from "
                                    "Discord chat text file exports that is "
-                                   "a message sent by the specified bots.")
+                                   "a message sent by the specified users."
+                                   "\n"
+                                   "Input all usernames as their exact "
+                                   "Discord usernames, including the "
+                                   "four character number tags (i.e., #0001) "
+                                   "separated by a colon (:) and no spaces.")
+        self.explainlabel.setWordWrap(True)
+
+        self.usertaglabel = QLabel("Keep messages from these users:")
+        self.explainlabel.setWordWrap(True)
+
+        self.bottaglabel = QLabel("Remove messages from these users:")
         self.explainlabel.setWordWrap(True)
 
         self.filefindbutton = QPushButton()
         self.filefindbutton.setObjectName("filefind")
         self.filefindbutton.setText("Select Document")
-        self.filefindbutton.clicked.connect(filefind_button_click)
+        self.filefindbutton.clicked.connect(self.filefind_button_click)
+
+        self.usertaginputbox = QLineEdit(usertagcfg)
+
+        self.bottaginputbox = QLineEdit(bottagcfg)
 
         layout = QVBoxLayout()
 
         layout.addWidget(self.explainlabel)
+
+        layout.addWidget(self.usertaglabel)
+        layout.addWidget(self.usertaginputbox)
+
+        layout.addWidget(self.bottaglabel)
+        layout.addWidget(self.bottaginputbox)
 
         layout.addWidget(self.filefindbutton)
 
@@ -218,8 +225,56 @@ class MainWindow(QMainWindow):
             self.layout = QVBoxLayout()
             self.setLayout(self.layout)
 
+    def print_thing(self, text):
+        print(text)
+
+
+    def filefind_button_click(self):
+        print("Filefile pressed")
+
+        filedialogoutput = MainWindow.FilefindDialog.getOpenFileName()
+
+        usertaginput = self.usertaginputbox.text()
+        bottaginput = self.bottaginputbox.text()
+
+        print(filedialogoutput)
+        print(usertaginput)
+        print(bottaginput)
+
+        filedialogpath = pathlib.Path(os.fsdecode(filedialogoutput[0]))
+
+        print("Selected file path: ", filedialogpath)
+
+        filedialogpath = str(filedialogpath)
+        print("repr:", filedialogpath)
+        filedialogpath = filedialogpath.encode(encoding="utf8", errors="surrogateescape")
+        print("encode:", filedialogpath)
+        filedialogpath = filedialogpath.decode(encoding="utf8",
+                                               errors="surrogateescape")
+        print("decode:", repr(filedialogpath))
+
+        config.read("settingsfortest2.ini", encoding="utf8")
+
+        targetstringsed = config["TARGETSTRINGS"]
+
+        targetstringsed["filepath"] = filedialogpath
+        targetstringsed["usertags"] = usertaginput
+        targetstringsed["bottags"] = bottaginput
+
+        with open("settingsfortest2.ini", "w", encoding="utf8", errors="surrogateescape") \
+                as configfile:
+            config.write(configfile)
+
+        config.read("settingsfortest2.ini", encoding="utf8")
+
+        with open("settingsfortest2.ini", "w", encoding="utf8", errors="surrogateescape") as configfile:
+            config.write(configfile)
+
+        scrubtext()
+
 
 app = QApplication(sys.argv)
+
 
 window = MainWindow()
 window.show()

@@ -26,20 +26,25 @@ UNICODE DECODING ERRORS:
     - How I fix this depends on exactly what I want to do with this.
     - Don't want to delete the characters since they ideally should be displayed in output.
  * Fix: decode input file as utf8, encode output file as utf16
-
-
-
-+++++++++++++++++++++++++++++++
-+            NOTES            +
-+++++++++++++++++++++++++++++++
 Avatar:
 * Only want to remove lines containing the singular word Avatar.
-* May be obsolete if pulling from straight TXT file output instead of copy/paste from HTML to TXT.
+* Obsolete if pulling from straight TXT file output instead of copy/paste from HTML to TXT.
 
 Brackets:
 * There are likely to be several instances of unpaired brackets or brackets across multiple lines-- how to handle?
 	* Could possibly have it remove any lines that begin OR end with any form of square bracket, in order to remove user error slipping through filter. Though, this could end up removing lines that are desired but just happen to have square brackets mixed in as a typo.
 * For now I just want to remove them-- maybe later I could separate them & pull/link them as comments.
+
+Bot messages:
+* similiar to brackets, for now will just remove, but may later cut & link.
+* Username input to cut bots?
+    * Have list of recognized usernames, turn on skipline until the next allowed username appears.
+
+
++++++++++++++++++++++++++++++++
++            NOTES            +
++++++++++++++++++++++++++++++++
+
 
 Reactions:
 * When copied from HTML these are appended as--
@@ -52,11 +57,6 @@ or
 or
 :WHEEZE: (1)
 * In either case, I want to preserve emojis in lines that aren't reactions.
-
-Bot messages:
-* similiar to brackets, for now will just remove, but may later cut & link.
-* Username input to cut bots?
-    * Have list of recognized usernames, turn on skipline until the next allowed username appears.
 
 Time/date:
 * No concerns. Tends to have distinct and consistent formats easily targetted.
